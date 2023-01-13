@@ -19,6 +19,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Generate .env file
+        run: 'echo "$DOT_ENV" > .env'
+        shell: bash
+        env:
+          DOT_ENV: ${{ secrets.DOT_ENV }}
+
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
