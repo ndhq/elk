@@ -16,7 +16,7 @@ RUN apk add git --no-cache
 COPY . ./
 
 # Build
-RUN pnpm i
+RUN pnpm i --frozen-lockfile
 RUN pnpm build
 
 FROM base AS runner
@@ -29,7 +29,7 @@ EXPOSE 5314/tcp
 
 ENV PORT=5314
 
-# Specify container only environment variables
+# Specify container only environment variables ( can be overwritten by runtime env )
 ENV NUXT_STORAGE_FS_BASE='/elk/data'
 
 # Persistent storage data
