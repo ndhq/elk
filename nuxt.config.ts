@@ -85,7 +85,7 @@ export default defineNuxtConfig({
       buildInfo: {} as BuildInfo, // set in build-env module
       pwaEnabled: !isDevelopment || process.env.VITE_DEV_PWA === 'true',
       translateApi: '',
-      defaultServer: 'mas.to',
+      defaultServer: 'eihei.net',
     },
     storage: {
       driver: isCI ? 'cloudflare' : 'fs',
@@ -126,7 +126,7 @@ export default defineNuxtConfig({
         { property: 'og:title', content: 'Elk' },
         { property: 'og:description', content: 'A nimble Mastodon web client' },
         { property: 'og:type', content: 'website' },
-        { property: 'og:image', content: 'https://elk.zone/elk-og.png' },
+        { property: 'og:image', content: 'https://elk.moe/elk-og.png' },
         { property: 'og:image:width', content: '3800' },
         { property: 'og:image:height', content: '1900' },
         { property: 'og:site_name', content: 'Elk' },
