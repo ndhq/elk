@@ -15,6 +15,9 @@ RUN apk add git --no-cache
 # Copy all files
 COPY . ./
 
+# Specify container only environment variables
+ENV NUXT_STORAGE_FS_BASE='/elk/data'
+
 # Build
 RUN pnpm i
 RUN pnpm build
@@ -28,5 +31,8 @@ COPY --from=builder /elk/.output ./.output
 EXPOSE 5314/tcp
 
 ENV PORT=5314
+
+# Persistent storage data
+VOLUME [ "/elk/data" ]
 
 CMD ["node", ".output/server/index.mjs"]
