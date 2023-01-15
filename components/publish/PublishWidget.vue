@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { EditorContent } from '@tiptap/vue-3'
 import type { mastodon } from 'masto'
-import type { Ref } from 'vue'
 import type { Draft } from '~/types'
 
 const {
@@ -90,6 +89,19 @@ async function publish() {
     emit('published', status)
 }
 
+useWebShareTarget(async ({ data: { data, action } }: any) => {
+  if (action !== 'compose-with-shared-data')
+    return
+
+  editor.value?.commands.focus('end')
+
+  if (data.text !== undefined)
+    editor.value?.commands.insertContent(data.text)
+
+  if (data.files !== undefined)
+    await uploadAttachments(data.files)
+})
+
 defineExpose({
   focusEditor: () => {
     editor.value?.commands?.focus?.()
@@ -98,7 +110,7 @@ defineExpose({
 </script>
 
 <template>
-  <div v-if="isMastoInitialised && currentUser" flex="~ col gap-4" py3 px2 sm:px4>
+  <div v-if="isHydrated && currentUser" flex="~ col gap-4" py3 px2 sm:px4>
     <template v-if="draft.editingStatus">
       <div flex="~ col gap-1">
         <div id="state-editing" text-secondary self-center>

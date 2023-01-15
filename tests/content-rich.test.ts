@@ -42,6 +42,11 @@ describe('content-rich', () => {
     expect(formatted).toMatchSnapshot()
   })
 
+  it('handles formatting from servers', async () => {
+    const { formatted } = await render('<h1>Fedi HTML Support Survey</h1><p>Does the following formatting come through accurately for you?</p><ul><li>This is an indented bulleted list (not just asterisks).</li><li><strong>This line is bold.</strong></li><li><em>This line is italic.</em></li></ul><ol><li>This list...</li><li>...is numbered and indented</li></ol><h1>This line is larger.</h1>')
+    expect(formatted).toMatchSnapshot()
+  })
+
   it('custom emoji', async () => {
     const { formatted } = await render('Daniel Roe :nuxt:', {
       emojis: {
@@ -131,6 +136,39 @@ describe('content-rich', () => {
       "
     `)
   })
+
+  it ('block with injected html, without language', async () => {
+    const { formatted } = await render(`
+      <pre>
+        <code>
+          &lt;a href="javascript:alert(1)">click me&lt;/a>
+        </code>
+      </pre>
+    `)
+    expect(formatted).toMatchSnapshot()
+  })
+
+  it ('block with injected html, with an unknown language', async () => {
+    const { formatted } = await render(`
+      <pre>
+        <code class="language-xyzzy">
+          &lt;a href="javascript:alert(1)">click me&lt;/a>
+        </code>
+      </pre>
+    `)
+    expect(formatted).toMatchSnapshot()
+  })
+
+  it ('block with injected html, with a known language', async () => {
+    const { formatted } = await render(`
+      <pre>
+        <code class="language-js">
+          &lt;a href="javascript:alert(1)">click me&lt;/a>
+        </code>
+      </pre>
+    `)
+    expect(formatted).toMatchSnapshot()
+  })
 })
 
 async function render(content: string, options?: ContentParseOptions) {
@@ -168,23 +206,11 @@ vi.mock('~/composables/dialog.ts', () => {
   return {}
 })
 
-vi.mock('~/components/content/ContentCode.vue', () => {
+vi.mock('shiki-es', async (importOriginal) => {
+  const mod = await importOriginal()
   return {
-    default: defineComponent({
-      props: {
-        code: {
-          type: String,
-          required: true,
-        },
-        lang: {
-          type: String,
-        },
-      },
-      setup(props) {
-        const raw = computed(() => decodeURIComponent(props.code).replace(/&#39;/g, '\''))
-        return () => h('pre', { lang: props.lang }, raw.value)
-      },
-    }),
+    ...(mod as any),
+    setCDN() {},
   }
 })
 
