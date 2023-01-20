@@ -5,18 +5,26 @@ WORKDIR /elk
 
 FROM base AS builder
 
-# Prepare pnpm ( refer to https://pnpm.io/installation#on-alpine-linux )
-RUN wget -qO /bin/pnpm "https://github.com/pnpm/pnpm/releases/latest/download/pnpm-linuxstatic-x64" && chmod +x /bin/pnpm
+# Prepare pnpm https://pnpm.io/installation#using-corepack
+RUN corepack enable
 
 # Prepare deps
 RUN apk update
 RUN apk add git --no-cache
 
-# Copy all files
+# Prepare build deps ( ignore postinstall scripts for now )
+COPY package.json ./
+COPY pnpm-lock.yaml ./
+COPY patches ./patches
+RUN pnpm i --frozen-lockfile --ignore-scripts
+
+# Copy all source files
 COPY . ./
 
-# Build
+# Run full install with every postinstall script ( This needs project file )
 RUN pnpm i --frozen-lockfile
+
+# Build
 RUN pnpm build
 
 FROM base AS runner
