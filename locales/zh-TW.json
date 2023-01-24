@@ -284,13 +284,6 @@
       "font_size": "字體大小",
       "label": "外觀",
       "light_mode": "淺色",
-      "size_label": {
-        "lg": "大",
-        "md": "中",
-        "sm": "小",
-        "xl": "特大",
-        "xs": "特小"
-      },
       "system_mode": "系統預設",
       "theme_color": "主題色"
     },
@@ -401,7 +394,6 @@
     "edited": "在 {0} 編輯了",
     "favourited_by": "被喜歡",
     "filter_hidden_phrase": "篩選依據",
-    "filter_removed_phrase": "從篩選中移除",
     "filter_show_anyway": "仍然顯示",
     "img_alt": {
       "desc": "描述",
