@@ -13,6 +13,7 @@ interface ExtendedManifestOptions extends ManifestOptions {
     method: string
     enctype: string
     params: {
+      title: string
       text: string
       url: string
       files: [{
@@ -92,14 +93,21 @@ export const createI18n = async (): Promise<LocalizedWebManifest> => {
           sizes: '512x512',
           type: 'image/png',
         },
+        {
+          src: 'maskable-icon.png',
+          sizes: '512x512',
+          type: 'image/png',
+          purpose: 'any maskable',
+        },
       ],
       share_target: {
         action: '/web-share-target',
         method: 'POST',
         enctype: 'multipart/form-data',
         params: {
+          title: 'title',
           text: 'text',
-          url: 'text',
+          url: 'url',
           files: [
             {
               name: 'files',
@@ -132,14 +140,21 @@ export const createI18n = async (): Promise<LocalizedWebManifest> => {
           sizes: '512x512',
           type: 'image/png',
         },
+        {
+          src: 'maskable-icon.png',
+          sizes: '512x512',
+          type: 'image/png',
+          purpose: 'any maskable',
+        },
       ],
       share_target: {
         action: '/web-share-target',
         method: 'POST',
         enctype: 'multipart/form-data',
         params: {
+          title: 'title',
           text: 'text',
-          url: 'text',
+          url: 'url',
           files: [
             {
               name: 'files',
