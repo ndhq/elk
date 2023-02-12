@@ -30,7 +30,7 @@ export function getDefaultDraft(options: Partial<Mutable<mastodon.v1.CreateStatu
     params: {
       status: status || '',
       inReplyToId,
-      visibility: visibility || 'public',
+      visibility: currentUser.value?.account.source.privacy || visibility || 'public',
       sensitive: sensitive ?? false,
       spoilerText: spoilerText || '',
       language: language || '', // auto inferred from current language on posting
@@ -74,6 +74,7 @@ export function getReplyDraft(status: mastodon.v1.Status) {
         inReplyToId: status!.id,
         visibility: status.visibility,
         mentions: accountsToMention,
+        language: status.language,
       })
     },
   }
@@ -88,7 +89,6 @@ export const isEmptyDraft = (draft: Draft | null | undefined) => {
 
   return (text.length === 0)
     && attachments.length === 0
-    && (params.spoilerText || '').length === 0
 }
 
 export interface UseDraft {
@@ -141,7 +141,7 @@ export function directMessageUser(account: mastodon.v1.Account) {
 
 export function clearEmptyDrafts() {
   for (const key in currentUserDrafts.value) {
-    if (builtinDraftKeys.includes(key))
+    if (builtinDraftKeys.includes(key) && !isEmptyDraft(currentUserDrafts.value[key]))
       continue
     if (!currentUserDrafts.value[key].params || isEmptyDraft(currentUserDrafts.value[key]))
       delete currentUserDrafts.value[key]
