@@ -38,3 +38,6 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: nyaone/elk:latest
+
+      - name: Send success webhook
+        run: curl ${{ secrets.DOCKER_BUILD_SUCCESS_WEBHOOK }}?subject=elk
