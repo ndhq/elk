@@ -162,6 +162,13 @@ export function htmlToText(html: string) {
   }
 }
 
+export function recursiveTreeToText(input: Node): string {
+  if (input && input.children && input.children.length > 0)
+    return input.children.map((n: Node) => recursiveTreeToText(n)).join('')
+  else
+    return treeToText(input)
+}
+
 export function treeToText(input: Node): string {
   let pre = ''
   let body = ''
@@ -445,7 +452,7 @@ function replaceCustomEmoji(customEmojis: Record<string, mastodon.v1.CustomEmoji
 }
 
 const _markdownReplacements: [RegExp, (c: (string | Node)[]) => Node][] = [
-  [/\*\*\*(.*?)\*\*\*/g, c => h('b', null, [h('em', null, c)])],
+  [/\*\*\*(.*?)\*\*\*/g, ([c]) => h('b', null, [h('em', null, c)])],
   [/\*\*(.*?)\*\*/g, c => h('b', null, c)],
   [/\*(.*?)\*/g, c => h('em', null, c)],
   [/~~(.*?)~~/g, c => h('del', null, c)],
