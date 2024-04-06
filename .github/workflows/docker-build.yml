@@ -38,7 +38,7 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/nyawork/elk:latest
+          tags: ghcr.io/${{ github.repository }}:latest
 
       - name: Send success webhook
         run: curl ${{ secrets.DOCKER_BUILD_SUCCESS_WEBHOOK }}?subject=elk
